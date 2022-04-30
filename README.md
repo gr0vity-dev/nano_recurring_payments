@@ -36,4 +36,5 @@ Add the following line to run the script every minute (modify your path)
 
 ```
 tips to fund the https://nyanowallet.cc faucet are welcome :-)
-nano_1nyano1gy9khpmwcfazh3hxxxposu3yj71yow9d8c9d19567oom316getmsg```
+nano_1nyano1gy9khpmwcfazh3hxxxposu3yj71yow9d8c9d19567oom316getmsg
+```
