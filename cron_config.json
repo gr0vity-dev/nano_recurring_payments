@@ -1,0 +1,12 @@
+{
+  "postgresql" : {
+    "client": "postgresql",
+    "connection": {
+        "host": "localhost",
+        "user": "nano_rp",
+        "password": "password",
+        "dbname": "nano_recurring_payments",
+        "port":"5432"
+        } 
+    }
+}
