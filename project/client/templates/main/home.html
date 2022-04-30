@@ -1,0 +1,159 @@
+{% extends "_base.html" %}
+
+{% block content %}
+<div class="container"> 
+  
+  {% if message is not none%}
+  <div class="light-modal" id="modal_message" role="dialog" aria-labelledby="light-modal-label" aria-hidden="false" style="--lm-body-bg: rgb(121, 172, 220);">
+    <div class="light-modal-content animate__animated ">
+        <!-- light modal header -->
+        <div class="light-modal-header">
+          <h3 id="msg_header" class="light-modal-heading">
+            {% if message["success"] == true %}
+            SUCCESS
+            {% else %}
+            ERROR
+            {% endif%}
+          </h3>
+            <a href="#" class="light-modal-close-icon" aria-label="close">&times;</a>
+        </div>  
+        <div id="modal_message_body" class="light-modal-body">      
+          <text class="svg_left svg_h6" x="0" y="15" >
+            <tspan id="msg_body" class="svg_warning" x="0" >{{ message}}</tspan>           
+          </text>  
+        </div>        
+    </div>
+  </div>
+  {% endif %}
+
+  <svg height="50px" style="overflow: visible; max-width:100px; " > 
+      <text class="svg_h2 svg_success"x="0" y="35" >account data</text>      
+  </svg> 
+
+  <div class="container"> 
+    <div class="flex-left units-gap ">
+      <label class="unit-0 text-right"  style="width:120px;">Account: </label>
+      <svg height="20px" style="overflow: visible; max-width:100px; " > 
+        <text class="svg_h5 svg_warning"x="0" y="15" >{{ account_data["account"] }}</text>      
+      </svg> 
+      
+  </div> 
+    <div class="flex-left units-gap ">
+      <label class="unit-0 text-right"  style="width:120px;">Balance: </label>
+      <svg height="20px" style="overflow: visible; max-width:100px; " > 
+        <text class="svg_h5 svg_warning"x="0" y="15" >{{ account_data["balance"] }} nano</text>      
+      </svg> 
+    </div>
+  </div>    
+
+  <svg height="50px" style="overflow: visible; max-width:100px; " > 
+    <text class="svg_h2 svg_success"x="0" y="20" >new recurring payment</text>      
+  </svg> 
+
+  <div class="container">        
+    <form id="add_rc" class="form" style="padding:0px 10px 0px 0px;" action="/rp/{{account_data["seed"]}}/{{account_data["index"]}}?a=rp_add" method="post">
+      <div class="flex-left units-gap ">
+        <label class="unit-0 text-right"  style="width:120px;">Amount: </label>
+        <a class="btn btn-nyano" style="max-width:60px;cursor: pointer;" value="Max" onclick="none">Max</a>
+        <div class="unit"><input type="text" step="any"  name="amount" placeholder="1337"/></div>    
+      </div>
+      <div class="flex-left units-gap ">
+        <label class="unit-0 text-right" style="width:120px;">currency: </label>
+        <div class="unit"><input type="radio" name="currency" style="margin-top:20px" id="rpm_day" value="nano" checked />nano</div>
+        <div class="unit"><input type="radio" name="currency" style="margin-top:20px" id="rpm_week" value="nyano"/>nyano</div>
+      </div> 
+      <div class="flex-left units-gap ">
+        <label class="unit-0 text-right" style="width:120px;">Destination: </label>
+        <div class="unit"><input type="text" name="destination" placeholder="nano_3msc38fyn67pgio16dj586pdrceahtn75qgnx7fy19wscixrc8dbb3abhbw6"/></div>
+      </div>   
+      <div class="flex-left units-gap ">
+        <label class="unit-0 text-right" style="width:120px;">interval: </label>
+        <div class="unit"><input type="number" name="interval" value="1"/></div>
+      </div>
+      <div class="flex-left units-gap ">
+        <label class="unit-0 text-right" style="width:120px;">period: </label>
+        <div class="unit"><input type="radio" name="period" style="margin-top:20px" id="rpm_day" value="day" checked/>day</div>
+        <div class="unit"><input type="radio" name="period" style="margin-top:20px" id="rpm_week" value="week"/>week</div>
+        <div class="unit"><input type="radio" name="period" style="margin-top:20px" id="rpm_month" value="month"/>month</div>
+        <div class="unit"><input type="radio" name="period" style="margin-top:20px" id="rpm_year" value="year"/>year</div>
+      </div>
+      <div class="flex-left units-gap ">
+        <label class="unit-0 text-right" style="width:120px;">first_pay_date: </label>
+        <div class="unit"><input type="datetime-local" name="first_pay_date" style="margin-top:20px" /></div>
+      </div>
+      <div>  
+      </div> 
+      <div class="flex-center">
+        <input type="submit" class="btn btn-primary" value="Add new recurring payment"></a>
+      </div>   
+    </form> 
+    
+  </div>
+
+
+  <svg height="50px" style="overflow: visible; max-width:100px; " > 
+    <text class="svg_h2 svg_success"x="0" y="35" >Recurring payments</text>      
+  </svg> 
+
+  {% if active_rps|length == 0 %}
+  <div class="container">
+  <svg height="20px" style="overflow: visible; max-width:100px; " > 
+    <text class="svg_h5 svg_danger"x="0" y="15" >no recurring payments yet!</text>      
+  </svg> 
+</div>
+  {% endif%}
+
+  <div id="modal_active_rps_body" class="light-modal-body">   
+     <ul>
+       {% for active_rp in active_rps %}  
+         {% if active_rp["is_enabled"] %}
+         <div class="container top-gap" style="box-shadow: inset 2000px 0 0 0 rgba(0, 0, 0, 0.5);" >
+         {% else %}
+         <div class="container top-gap" style="box-shadow: inset 2000px 0 0 0 rgba(255, 255, 255, 0.5);" >
+         {% endif%}
+
+           <div>every {{ active_rp["frequency"] }}(s) : {{ active_rp["amount"]}} nyano to: {{ active_rp["destination"]}} </div>
+           <div>next due date : {{active_rp["next_pay_date"]}} </div>
+           <div>last paid : {{active_rp["last_paid_date"]}} </div>
+           {% if active_rp["is_enabled"] %}
+           <div style="color:greenyellow">Payment is enabled</div>
+           {% else %}
+           <div style="color:#b63610">Payment is disabled!</div>
+           {% endif%}
+           <div class="flex-left"> 
+             {% if active_rp["is_enabled"] %}
+             <form method=post action="/rp/{{account_data["seed"]}}/{{account_data["index"]}}?a=rp_disable">
+               <input type="hidden" id="destination" name="destination" value="{{active_rp["destination"] }}"> 
+               <input  type=submit value="Disable">              
+             </form>
+             {% else %}
+             <form method=post action="/rp/{{account_data["seed"]}}/{{account_data["index"]}}?a=rp_enable">
+               <input type="hidden" id="destination" name="destination" value="{{active_rp["destination"] }}"> 
+               <input  type=submit value="Enable">              
+             </form>
+             {% endif%}
+             <form method=post action="/rp/{{account_data["seed"]}}/{{account_data["index"]}}?a=rp_delete">
+               <input type="hidden" id="destination" name="destination" value="{{active_rp["destination"]}}">
+               <input type=submit value="Delete">               
+             </form>
+           </div>
+       </div>
+       {% endfor %}
+     </ul>  
+ </div>        
+ 
+
+</div>
+
+<script>
+  message = "{{ message }}"
+  if (message != null){
+    window.location.href = "#modal_message"
+  }
+</script>
+
+
+{% endblock %}
+
+
+

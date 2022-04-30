@@ -1,0 +1,235 @@
+{% extends "_base.html" %}
+
+{% block content %}
+<div class="container">  
+
+  <svg height="50px" style="overflow: visible; max-width:100px; " > 
+      <text class="svg_h2 svg_success"x="0" y="35" >account data</text>      
+  </svg> 
+
+  <div class="flex-center flex-middle" style="text-align: center;">  
+    <div>nano account : {{ none }}</div> 
+  </div>    
+
+  <svg height="50px" style="overflow: visible; max-width:100px; " > 
+    <text class="svg_h2 svg_success"x="0" y="35" >new recurring payment</text>      
+  </svg> 
+
+  <div class="container">        
+    <form id="add_rc" class="form" style="padding:0px 10px 0px 0px;" action="/rc_add">
+      <div class="flex-left units-gap ">
+        <label class="unit-0 text-right"  style="width:120px;">Amount: </label>
+        <a class="btn btn-nyano" style="max-width:60px;cursor: pointer;" value="Max" onclick="none">Max</a>
+        <div class="unit"><input type="number" step="any"  id="rpm_amount" placeholder="1337"/></div>    
+      </div>
+      <div class="flex-left units-gap ">
+        <label class="unit-0 text-right" style="width:120px;">Destination: </label>
+        <div class="unit"><input type="text" id="rpm_destination" placeholder="nyano_..."/></div>
+      </div>   
+      <div class="flex-left units-gap ">
+        <label class="unit-0 text-right" style="width:120px;">interval: </label>
+        <div class="unit"><input type="number" id="rpm_interval" placeholder="1"/></div>
+      </div>
+      <div class="flex-left units-gap ">
+        <label class="unit-0 text-right" style="width:120px;">period: </label>
+        <div class="unit"><input type="radio" name="rpm_period" style="margin-top:20px" id="rpm_day" value="day" />day</div>
+        <div class="unit"><input type="radio" name="rpm_period" style="margin-top:20px" id="rpm_week" value="week"/>week</div>
+        <div class="unit"><input type="radio" name="rpm_period" style="margin-top:20px" id="rpm_month" value="month"/>month</div>
+        <div class="unit"><input type="radio" name="rpm_period" style="margin-top:20px" id="rpm_year" value="year"/>year</div>
+      </div>
+      <div class="flex-left units-gap ">
+        <label class="unit-0 text-right" style="width:120px;">first_pay_date: </label>
+        <div class="unit"><input type="datetime-local" id="rpm_first_pay_date" style="margin-top:20px" /></div>
+      </div>
+      <div>  
+      </div>    
+    </form> 
+    <div class="flex-center">
+      <a class="btn btn-primary" style="cursor: pointer;" value="Max" onclick="submit_insert()">Add new recurring payment</a>
+    </div>
+  </div>
+
+
+  <svg height="50px" style="overflow: visible; max-width:100px; " > 
+    <text class="svg_h2 svg_success"x="0" y="35" >Recurring payments</text>      
+  </svg> 
+
+
+
+  <div id="edit_recurring_payments" class="container">
+
+  </div>
+
+</div>
+
+<script>
+
+  seed = "1d26522ce31843a164b06bf6ffe5b7b4dde0d084e5c3e988ebcc9572b73ad8a9"
+  index = 0
+  
+  fetch('/api/rpm/'+seed+'/'+ index , { method: 'GET' ,headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' } } )
+      .then(response => response.json())
+      .then(json => format_current_rps(json)
+      );
+  
+  function format_current_rps(data) {    
+    console.log(data); 
+    i = 0   
+    Array.from(data).forEach(child => {
+      form = document.createElement('div'); 
+      form.id = "form_" + i
+      form.style="margin:0px 10px 10px 0px; padding:10px; border:3px solid white" 
+      form.action="#"
+      form.classList.add("form")  
+      
+      let button_en_dis = document.createElement('button');
+      button_en_dis.classList.add("btn")
+      button_en_dis.classList.add("btn-primary")
+
+      let button_update = document.createElement('button');
+      button_update.classList.add("btn")
+      button_update.classList.add("btn-primary")
+      button_update.innerHTML = "Update"
+      button_update.onclick = () => update_rcp(form.id.toString(), child) 
+      
+      let button_del = document.createElement('button');
+      button_del.classList.add("btn")
+      button_del.classList.add("btn-primary")
+      button_del.innerHTML = "Delete"
+      button_del.onclick = () => delete_rcp(form.id.toString(), child) 
+      
+      document.getElementById('edit_recurring_payments').appendChild(form);   
+      for (el in child) {        
+          
+          let div_flex_left = document.createElement('div');
+          div_flex_left.classList.add("flex-left")
+          div_flex_left.classList.add("units-gap")          
+         
+          let label= document.createElement('label');
+          label.classList.add("unit-0")
+          label.classList.add("text-right")
+          label.style ="width:200px;"           
+          label.innerHTML = el  
+
+          let div_unit = document.createElement('div');
+          div_unit.classList.add("unit")
+
+          let input = document.createElement('input');
+          if ( ! [ "interval", "period", "amount", "currency", "first_pay_date","is_enabled"].includes(el)) { 
+            input.disabled = true
+          }
+          if (typeof(child[el]) == "number") {
+            input.type = "number"
+          } else { 
+          input.type = "text" }  
+          input.name = el;
+          input.value = child[el] ;
+          input.innerHTML += child[el];
+
+          if(el == "is_enabled") {
+            if(child[el] == true) { 
+              input.style="background-color:green" ;
+              button_en_dis.name = "Disable"
+              button_en_dis.innerHTML = "Disable"
+              // button_en_dis.addEventListener('click', disable_rcp(child), false)
+              button_en_dis.onclick = () => disable_rcp(form.id.toString(), child)  }
+            else if (child[el] == false) {
+              input.style="background-color:red" ;
+              button_en_dis.name = "Enable"
+              button_en_dis.innerHTML = "Enable"
+              // button_en_dis.addEventListener('click', enable_rcp(child), false)
+              button_en_dis.onclick = () => enable_rcp(form.id.toString(), child)
+            }            
+          }   
+
+          div_flex_left.appendChild(label)
+          div_flex_left.appendChild(div_unit)         
+          div_unit.appendChild(input);
+          form.appendChild(div_flex_left)
+         
+      } 
+      form.appendChild(button_en_dis)    
+      form.appendChild(button_del)    
+      form.appendChild(button_update)
+      i = i+ 7
+    })
+    
+  }
+  
+  function delete_rcp(form_id, data) {
+    data = get_form_data(form_id, data)  
+    console.log("DELETE");
+    data["seed"] = seed
+    data["index"] = index
+    data["is_deleted"] = true 
+    submit_update(data)    
+  }
+  
+  function enable_rcp(form_id, data) {  
+    data = get_form_data(form_id, data)
+    console.log("ENABLE"); 
+    data["seed"] = seed
+    data["index"] = index 
+    data["is_enabled"] = true 
+    submit_update(data)
+  }
+  function disable_rcp(form_id, data) {
+    data = get_form_data(form_id, data)
+    console.log("DISABLE");  
+    data["seed"] = seed
+    data["index"] = index 
+    data["is_enabled"] = false 
+    submit_update(data)    
+  }
+
+  function get_form_data(form_id, data){    
+    for (el in data) {      
+      if (["destination", ,"interval", "period", "amount", "currency", "first_pay_date","is_enabled"].includes(el)) {
+        if (typeof(data[el]) == "number"){
+          data[el] =  parseFloat(document.getElementById(form_id).querySelector("input[name=" + el + "]").value) ;
+        }  else {
+        data[el] = document.getElementById(form_id).querySelector("input[name=" + el + "]").value; }
+      }
+    }
+    return data
+  }
+
+  
+  function submit_update( data) {   
+    console.log(JSON.stringify(data))
+    fetch('/api/rpm/'+seed+'/'+ index , 
+     { method: 'PUT' ,
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    } )
+      .then(response => response.json())
+      .then(json => console.log(JSON.stringify(json))
+      );
+  }
+
+  function submit_insert(data) {   
+    console.log(JSON.stringify(data))
+    fetch('/api/rpm/'+seed+'/'+ index , 
+     { method: 'POST' ,
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    } )
+      .then(response => response.json())
+      .then(json => console.log(JSON.stringify(json))
+      );
+  }
+
+  function update_rcp(form_id, data) {
+    data = get_form_data(form_id, data)
+    data["seed"] = seed
+    data["index"] = index 
+    submit_update(data)
+  }
+
+  
+  </script>
+
+{% endblock %}
+
+
+

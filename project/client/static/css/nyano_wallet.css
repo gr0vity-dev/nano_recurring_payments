@@ -1,0 +1,245 @@
+a {
+  font-size: min(4vw, 1.5rem);
+  color: #fdcd00;
+  -webkit-text-decoration-skip: objects;
+  text-decoration: none;
+} 
+
+a, a:hover, a:visited, a:active {
+  color: inherit;
+  text-decoration: none;
+ }
+
+text{
+  fill : #ffffff;
+  font-size: min(4vw, 1.5rem); 
+} 
+
+@supports (paint-order: stroke fill) {  
+  text{
+    fill : #ffffff;
+    font-size: min(4vw, 1.5rem);  
+    stroke: #0e1032;
+    stroke-width: 6px; 
+    paint-order: stroke fill; 
+  } 
+}
+.svg_center{
+  text-anchor: middle; /* align center */
+  dominant-baseline: middle; /* vertical alignment fix */  
+}
+
+.svg_left{
+  text-anchor: start; /* align center */
+  dominant-baseline: middle; /* vertical alignment fix */  
+}
+
+.svg_h1{
+  font-size: 2rem;
+  margin: 1.875rem 0 0;
+}
+
+.svg_h2 {
+  font-size:1.625rem;
+  margin: 1.875rem 0 0;
+}
+
+.svg_h3 {
+  font-size:1.375rem;
+  margin: 1.875rem 0 0;
+}
+
+.svg_h4 {
+  font-size:1.25rem;
+  margin: 1.875rem 0 0;
+}
+
+.svg_h5 {
+  font-size:1.125rem;
+  margin: 1.875rem 0 0;
+}
+
+.svg_h6 {
+  font-size:1rem;
+  margin: 1.875rem 0 0;
+}
+
+.svg_link {
+  fill: #fdcd00;
+}
+.svg_link:hover {
+  fill : #d7a29c;
+  cursor: pointer;  
+}
+
+.svg_success{
+  fill : #60da5c;
+}
+
+.svg_warning{
+  fill : #fdcd00;
+}
+
+.svg_danger{
+  fill : #da5c5c;
+}
+
+.svg_container_center {
+  position:relative;width:100%;left:50%
+}
+.svg_container_left {
+  position:relative;width:100%;
+}
+
+
+.t_success {
+    /* text-shadow: 0 0 3px #FF0000, 0 0 5px #0000FF; */
+    color: #60da5c;
+  }
+  
+.t_danger {
+  /* text-shadow: 0 0 3px #FF0000, 0 0 5px #0000FF; */
+  color: #da5c5c;
+}
+
+.t_warning {
+  /* text-shadow: 0 0 3px #FF0000, 0 0 5px #0000FF; */
+  color: #fdcd00;
+}
+
+.z1 {
+  z-index : 1
+}
+
+.z2 {
+  z-index : 2
+}
+.z3 {
+  z-index : 3
+}
+.z999 {
+  z-index : 999
+}
+
+.img_placeholder {
+  position:relative;width:80%;height:0; padding-top:75%
+}
+
+.img_filler {
+  position:absolute; top:0; left:0; width:100%;
+}
+
+.quest {
+  background-image: linear-gradient(#ffee00 ,#fd8200);
+  background-clip: text; 
+  -webkit-text-fill-color: transparent;
+}
+
+
+.stroke {
+  -webkit-text-stroke-width: 6px; 
+  color:#0e1032;
+  /* -webkit-text-stroke-color: #0e1032; */
+  /* paint-order: stroke fill;    */
+  /* background-image: linear-gradient(#fdcd00 ,#fd8200);
+  background-clip: text; 
+  -webkit-text-fill-color: transparent; */
+}
+
+.strokefill_danger {  
+  color: #da5c5c;  
+  /* background-image: linear-gradient(#9e9292 ,#d10000);
+  background-clip: text; 
+  -webkit-text-fill-color: transparent;   */
+}
+
+.strokefill_success { 
+  color: #60da5c;  
+  /* background-image: linear-gradient(#09ff00 ,#05a300);
+  background-clip: text; 
+  -webkit-text-fill-color: transparent;   */
+}
+
+.strokefill_warning { 
+  color: #fdcd00;   
+  /* background-image: linear-gradient(#ffee00 ,#fd8200);
+  background-clip: text; 
+  -webkit-text-fill-color: transparent;   */
+}
+
+.strokefill_link {
+  color: #fdcd00;   
+  /* background-image: linear-gradient(#ffee00 ,#fd8200);
+  background-clip: text; 
+  -webkit-text-fill-color: transparent;   */
+}
+.strokefill_link:hover { 
+  color : #d7a29c ;
+  /* background-image: linear-gradient(#d7a29c ,#d7a29c);;
+  background-clip: text; 
+  -webkit-text-fill-color: transparent; */
+}
+
+.strokefill_simlink {  
+  color: #fdcd00; 
+}
+
+.strokefill_simlink:hover {  
+  color : #d7a29c
+  /* background-image: linear-gradient(#d7a29c ,#d7a29c);
+  background-clip: text; 
+  -webkit-text-fill-color: transparent; */
+}
+
+.img_quest:hover {
+  filter: brightness(1);
+}
+.img_quest:hover {
+  filter: brightness(1.1);
+  cursor: pointer;
+}
+
+.btn-send {
+  margin-top:15px;
+  font-size: min(4vw, 2rem);
+  background:transparent;
+  border:0;
+  cursor: pointer;
+}
+
+
+.btn-send:active,
+.btn-send:hover {
+  color:#d7a29c;
+  paint-order: stroke fill;  
+}
+
+.btn-send[disabled] {
+  cursor: default;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+
+
+
+.btn-nyano {  
+  background-color: #2273c3;
+  border-color: #2273c3;
+  color: #fff;
+}
+
+.btn-nyano:active,
+.btn-nyano:hover {
+  background-color: #0e1032;
+}
+.btn-nyano:focus {
+  outline: none;
+}
+
+.btn-nyano[disabled] {
+  cursor: default;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
